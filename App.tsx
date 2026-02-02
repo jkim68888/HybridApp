@@ -59,7 +59,7 @@ const App = () => {
         <Stack.Screen 
           name={RouteNames.BROWSER} 
           component={BrowserScreen} 
-          options={{ headerBackTitleVisible: false }} 
+          options={{ headerShown: false }} 
         /> 
       </Stack.Navigator>
     </NavigationContainer>
