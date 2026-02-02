@@ -1,79 +1,66 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# HybridApp
 
-# Getting Started
+### React-Native App with WebView
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## 앱 네비게이션 구현
 
-## Step 1: Start the Metro Server
+- 탭 네비게이션 : [@react-navigation/bottom-tabs](https://reactnavigation.org/docs/bottom-tab-navigator)
+- 스크린 네비게이션 : [@react-navigation/native-stack](https://reactnavigation.org/docs/native-stack-navigator)
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## 웹뷰 화면 구현
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- 홈 스크린의 웹뷰에 웹사이트 로드 
+- 웹사이트 리퀘스트를 처리하여 새로운 스크린으로 이동
+```tsx
+<WebView 
+   source={{ uri: 'https://m.naver.com' }}
+   onShouldStartLoadWithRequest={request => {
+      console.log(request)
 
-```bash
-# using npm
-npm start
+      if (request.url.startsWith('https://m.naver.com') || 
+         request.mainDocumentURL?.startsWith('http://m.naver.com')) {
+         return true
+      }
+      
+      if (request.url != null && request.url.startsWith('https://')) {
+         navigation.navigate(RouteNames.BROWSER, { url: request.url })
+         return false
+      }
 
-# OR using Yarn
-yarn start
+      return true
+   }}
+/>
 ```
 
-## Step 2: Start your Application
+## 브라우저 기능 구현
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+- 현재 접속 중인 웹사이트 정보 나타내기
+- 웹사이트 로딩바 구현
+- 뒤로가기, 앞으로가기, 새로고침 기능 구현
+```tsx
+const { url } = route.params
+const [currentUrl, setCurrentUrl] = useState(url)
+const urlTitle = useMemo(() => {
+   return currentUrl.replace('https://', '').split('/')[0]
+}, [currentUrl])
 
-### For Android
+const progress = useRef(new Animated.Value(0)).current
 
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+<View style={styles.loadingBarBackground}>
+   <Animated.View style={[styles.loadingBar, { width: progress.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]} />
+</View>
+<WebView 
+   source={{ uri: url }} 
+   onNavigationStateChange={({ url }) => setCurrentUrl(url)} 
+   onLoadProgress={({ nativeEvent }) => {
+      console.log(nativeEvent.progress)
+      progress.setValue(nativeEvent.progress)
+   }}
+   onLoadEnd={() => {
+      progress.setValue(0)
+   }}
+/>
 ```
 
-### For iOS
 
-```bash
-# using npm
-npm run ios
 
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
