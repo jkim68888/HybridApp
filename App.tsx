@@ -6,15 +6,42 @@ import ShoppingScreen from './screens/ShoppingScreen';
 import BrowserScreen from './screens/BrowserScreen';
 import { RouteNames, RootStackParams } from './routes';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParams>();
 
 const HomeTab = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name={RouteNames.HOME} component={HomeScreen} />
-      <Tab.Screen name={RouteNames.SHOPPING} component={ShoppingScreen} />
+    <Tab.Navigator 
+      screenOptions={{
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: 'bold',
+        },
+      }}>
+      <Tab.Screen 
+        name={RouteNames.HOME} 
+        component={HomeScreen} 
+        options={{ 
+          title: '홈',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="house" size={26} color={color} iconStyle="solid" />
+          ) 
+        }} 
+      />
+      <Tab.Screen 
+        name={RouteNames.SHOPPING} 
+        component={ShoppingScreen} 
+        options={{ 
+          title: '쇼핑',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="cart-shopping" size={26} color={color} iconStyle="solid" />
+          ) 
+        }} 
+      />
     </Tab.Navigator>
   );
 };
@@ -31,6 +58,7 @@ const App = () => {
         <Stack.Screen 
           name={RouteNames.BROWSER} 
           component={BrowserScreen} 
+          options={{ headerBackTitleVisible: false }} 
         /> 
       </Stack.Navigator>
     </NavigationContainer>
