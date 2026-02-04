@@ -62,5 +62,8 @@ const progress = useRef(new Animated.Value(0)).current
 />
 ```
 
+## 네이티브 기능 구현
+- Pull To Refresh 기능 구현 : [React-Native Components > RefreshControl](https://reactnative.dev/docs/refreshcontrol)
+- 네이티브 공유 기능 구현 : [React-Native APIs > Share](https://reactnative.dev/docs/share)
 
 
