@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useMemo, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import WebView from 'react-native-webview'
@@ -70,6 +70,11 @@ const BrowserScreen = ({ route, navigation }: Props) => {
         <NavButton iconName="arrow-left" disabled={!canGoBack} onPress={() => webViewRef.current?.goBack()} />
         <NavButton iconName="arrow-right" disabled={!canGoForward} onPress={() => webViewRef.current?.goForward()} />
         <NavButton iconName="arrow-rotate-right" onPress={() => webViewRef.current?.reload()} />
+        <NavButton iconName="share" onPress={() => {
+          Share.share({
+            message: currentUrl,
+          })
+        }} />
       </View>
     </SafeAreaView>   
   )
