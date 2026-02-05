@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<RootStackParams>;
 
 const HomeScreen = ({navigation}: Props) => {
   return (
-    <SafeAreaView style={styles.safearea}>
+    <SafeAreaView style={styles.safearea} edges={['top']}>
       <WebView sou
         source={{ uri: 'https://m.naver.com' }}
         onShouldStartLoadWithRequest={request => {
