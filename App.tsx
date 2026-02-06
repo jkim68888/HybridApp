@@ -7,6 +7,8 @@ import BrowserScreen from './screens/BrowserScreen';
 import { RouteNames, RootStackParams } from './routes';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
+import LoginButton from './components/LoginButton';
+import LoginScreen from './screens/LoginScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -54,13 +56,18 @@ const App = () => {
         <Stack.Screen 
           name={RouteNames.Home_Tab} 
           component={HomeTab} 
-          options={{ headerShown: false }} 
+          options={{ title: '', headerRight: () => <LoginButton /> }} 
         />
         <Stack.Screen 
           name={RouteNames.BROWSER} 
           component={BrowserScreen} 
           options={{ headerShown: false }} 
         /> 
+        <Stack.Screen 
+          name={RouteNames.LOGIN} 
+          component={LoginScreen} 
+          options={{ title: '로그인' }} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

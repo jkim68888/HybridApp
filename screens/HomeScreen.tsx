@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { StyleSheet, View } from 'react-native'
+import React from 'react' 
 import WebView from 'react-native-webview'
 import { RouteNames } from '../routes'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -10,7 +9,7 @@ type Props = NativeStackScreenProps<RootStackParams>;
 
 const HomeScreen = ({navigation}: Props) => {
   return (
-    <SafeAreaView style={styles.safearea} edges={['top']}>
+    <View style={styles.safearea}>
       <WebView sou
         source={{ uri: 'https://m.naver.com' }}
         onShouldStartLoadWithRequest={request => {
@@ -28,7 +27,7 @@ const HomeScreen = ({navigation}: Props) => {
           return true
         }}
       />
-    </SafeAreaView>
+    </View>
   )
 }
 

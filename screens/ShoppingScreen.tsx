@@ -1,6 +1,5 @@
-import { RefreshControl, ScrollView, StyleSheet} from 'react-native'
+import { RefreshControl, ScrollView, StyleSheet, View} from 'react-native'
 import React, { useRef, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import WebView from 'react-native-webview'
 import { RouteNames } from '../routes'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -23,7 +22,7 @@ const ShoppingScreen = ({navigation}: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.safearea} edges={['top']}>
+    <View style={styles.safearea}>
       <ScrollView 
         contentContainerStyle={styles.contentContainerStyle}  
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
@@ -51,7 +50,7 @@ const ShoppingScreen = ({navigation}: Props) => {
           renderLoading={() => <></>}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
