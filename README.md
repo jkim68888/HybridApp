@@ -1,6 +1,4 @@
-# HybridApp
-
-### React-Native App with WebView
+# HybridApp : React-Native App with WebView
 
 ## 앱 네비게이션 구현
 
