@@ -1,5 +1,5 @@
 import { Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import WebView from 'react-native-webview'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -7,6 +7,7 @@ import { RootStackParams } from '../routes'
 import { Animated } from 'react-native'
 import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6'
 import type { FontAwesome6SolidIconName } from '@react-native-vector-icons/fontawesome6'
+import { WebViewContext } from '../components/WebViewProvider'
 
 type Props = NativeStackScreenProps<RootStackParams, 'BrowserScreen'>;
 
@@ -27,13 +28,13 @@ const NavButton = ({
 }
 
 const BrowserScreen = ({ route, navigation }: Props) => {
+  const context = useContext(WebViewContext)
   const { url } = route.params
   const [currentUrl, setCurrentUrl] = useState(url)
   const urlTitle = useMemo(() => {
     return currentUrl.replace('https://', '').split('/')[0]
   }, [currentUrl])
   const progress = useRef(new Animated.Value(0)).current
-  const webViewRef = useRef<WebView>(null)
   const [canGoBack, setCanGoBack] = useState(false)
   const [canGoForward, setCanGoForward] = useState(false)
 
@@ -46,8 +47,13 @@ const BrowserScreen = ({ route, navigation }: Props) => {
         <Animated.View style={[styles.loadingBar, { width: progress.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]} />
       </View>
       <WebView 
-        ref={webViewRef}
+        ref={(ref) => {
+          if (ref) {
+            context?.addWebViewRef(ref)
+          }
+        }}
         source={{ uri: url }} 
+        originWhitelist={['http://*', 'https://*', 'about:*']}
         onNavigationStateChange={(event) => {
           setCurrentUrl(event.url)
           setCanGoBack(event.canGoBack)
@@ -67,9 +73,9 @@ const BrowserScreen = ({ route, navigation }: Props) => {
             <Text style={styles.naverIconText}>N</Text>
           </View>
         </TouchableOpacity>
-        <NavButton iconName="arrow-left" disabled={!canGoBack} onPress={() => webViewRef.current?.goBack()} />
-        <NavButton iconName="arrow-right" disabled={!canGoForward} onPress={() => webViewRef.current?.goForward()} />
-        <NavButton iconName="arrow-rotate-right" onPress={() => webViewRef.current?.reload()} />
+        <NavButton iconName="arrow-left" disabled={!canGoBack} onPress={() => context?.webViewRefs.current?.forEach(ref => ref.goBack())} />
+        <NavButton iconName="arrow-right" disabled={!canGoForward} onPress={() => context?.webViewRefs.current?.forEach(ref => ref.goForward())} />
+        <NavButton iconName="arrow-rotate-right" onPress={() => context?.webViewRefs.current?.forEach(ref => ref.reload())} />
         <NavButton iconName="share" onPress={() => {
           Share.share({
             message: currentUrl,
